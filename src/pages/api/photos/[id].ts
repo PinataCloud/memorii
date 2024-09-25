@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getAuth, auth } from '@clerk/nextjs/server'
+import { getAuth } from '@clerk/nextjs/server'
 import { pinata } from '@/pinata'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if(req.method === "GET") {
     try {
-      auth().protect()
       const { userId} = getAuth(req)
 
       const id = req.query.id;
@@ -15,8 +14,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       
       const groups = await pinata.groups.list().name(userId)
-      
-      let files = []
 
       if(groups && groups?.groups?.length > 0) {
         const group = groups.groups[0];

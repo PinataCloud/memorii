@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getAuth, auth } from '@clerk/nextjs/server'
+import { getAuth } from '@clerk/nextjs/server'
 import { pinata } from '@/pinata'
 
 export const dynamic = 'force-dynamic' // Make sure you don't serve a cached key, which will be expired
@@ -7,7 +7,6 @@ export const dynamic = 'force-dynamic' // Make sure you don't serve a cached key
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if(req.method === "GET") {
     try {
-      auth().protect()
       const { userId} = getAuth(req)
 
       if (!userId) {
