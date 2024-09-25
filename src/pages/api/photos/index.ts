@@ -1,17 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getAuth } from '@clerk/nextjs/server'
+import { getAuth, auth } from '@clerk/nextjs/server'
 import { pinata } from '@/pinata'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if(req.method === "GET") {
     try {
-      const { getToken, userId} = getAuth(req)
-
+      auth().protect()
+      const { userId} = getAuth(req)      
       if (!userId) {
         return res.status(401).json({ error: 'Unauthorized' })
       }
-      const token = await getToken()
-      //  Verify token here
       
       const groups = await pinata.groups.list().name(userId)
       
@@ -21,12 +19,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const group = groups.groups[0];
         const response = await pinata.files.list().group(group.id)
         for(const file of response.files) {        
-          const signedUrl = await pinata.gateways.createSignedURL({ cid: file.cid, expires: 30000 })
+          const signedUrl = await pinata.gateways.createSignedURL({ cid: file.cid, expires: 30000 }).optimizeImage({
+            width: 500,
+            height: 500,
+            format: "webp"
+          })
+          
           files.push({
             id: file.id, 
             name: file.name, 
             size: file.size, 
-            source: signedUrl
+            source: signedUrl, 
+            cid: file.cid
           })
         }
       }

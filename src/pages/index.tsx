@@ -3,18 +3,23 @@ import { useState, useEffect, useRef } from "react"
 import { useUser } from '@clerk/nextjs'
 import { pinata } from "@/pinata";
 import { FileListItem } from "pinata";
+import PhotoModal from "@/components/PhotoModal";
+import Head from "next/head";
 
-type File = {
+export type File = {
   id: string,
   size: number;
   name: string;
   source: string;
+  cid: string;
 }
 
 export default function Photos() {
   const [files, setFiles] = useState<File[]>([]);
   const [selectedFile, setSelectedFile] = useState<any>(null)
   const [uploading, setUploading] = useState(false);
+  const [fileToOpen, setFileToOpen] = useState<File | null>(null);
+  const [open, setOpen] = useState(false);
   const { user } = useUser()
   const fileRef: any = useRef()
 
@@ -50,22 +55,39 @@ export default function Photos() {
     loadFiles();
   }
 
+  const handleClose = () => {
+    setFileToOpen(null)
+    setOpen(false);
+  }
+
   const handleFileSelect = () => {
     fileRef?.current?.click()
   }
 
+  const openPhoto = (file: File) => {
+    setFileToOpen(file);
+    setOpen(true);
+  }
+
   return (
     <div className="w-3/4 m-auto max-w-[1220px]">
-      <div className="py-6 flex items-center justify-between w-full">
-        <h1 className="text-3xl font-bold flex items-center">Memorii</h1>
+      <Head>
+        <title>Memorii</title>
+        <meta property="og:title" content="Memorii" key="title" />
+        <meta property="og:description" content="Your photos are your memories. Keep them safe." key="title" />
+        <link rel="icon" href="/clouds.png" type="image/png" />
+      </Head>
+      <div className="py-6 flex items-center justify-between w-full font-sfBold">
+        <h1 className="text-3xl font-bold font-sfSemi flex items-center"><img src="/clouds.svg" alt="3D clouds" /></h1>
         <SignOutButton />
       </div>
-      <div className="py-6 flex items-center w-full">
-        <h1 className="text-2xl font-bold">Your Locker</h1>
-        <button onClick={handleFileSelect} className="ml-4">
+      <div className="py-6 flex items-center w-full justify-between">
+        <h1 className="text-3xl md:text-6xl xl:text-8xl font-sans gradient-text italic">Your Memoriis</h1>
+        <button onClick={handleFileSelect} className="plus -mt-6 p-2 md:p-4 rounded-full border border-white">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
+
         </button>
         <input value={selectedFile} onChange={handleFileChange} className="hidden" type="file" accept="image/*" ref={fileRef} />
       </div>
@@ -74,8 +96,8 @@ export default function Photos() {
         className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8"
       >
         {files?.map((file) => (
-          <li key={file.id} className="relative">
-            <div className="group aspect-h-7 aspect-w-10 block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
+          <li key={file.id} className="relative font-sfSemi" onClick={() => openPhoto(file)}>
+            <div className="group aspect-h-7 aspect-w-10 block w-full overflow-hidden rounded-lg bg-gray-100">
               {file.source ? (
                 <img
                   alt={file.name}
@@ -96,6 +118,7 @@ export default function Photos() {
           </li>
         ))}
       </ul>
+      <PhotoModal open={open} handleClose={handleClose} file={fileToOpen} />
     </div>
   )
 }

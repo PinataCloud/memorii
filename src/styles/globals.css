@@ -2,10 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  @font-face {
+    font-family: 'Cooper';
+    src: url("/CooperBlackStd.otf") format("opentype");
+  }
+  @font-face {
+    font-family: 'SF Pro Semi';
+    src: url("/SF-Pro-Display-Semibold.otf") format("opentype");
+  }
+  @font-face {
+    font-family: 'SF Pro Bold';
+    src: url("/SF-Pro-Display-Bold.otf") format("opentype");
+  }
+}
+
+
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--foreground);  
+  min-height: 100vh;
+  font-family: 'Cooper', Arial, Helvetica, sans-serif;
+}
+
+body, .plus {
+  background: linear-gradient(180deg, #A8EAFF 0%, #FFF 100%);
+}
+
+.gradient-text {
+  background: linear-gradient(180deg, #FFF 0%, #A8EAFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 @layer utilities {

@@ -8,6 +8,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Cooper', 'sans-serif'], 
+        sfBold: ['SF Pro Bold', 'sans-serif'],
+        sfSemi: ['SF Pro Semi', 'sans-serif']
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
