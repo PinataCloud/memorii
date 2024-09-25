@@ -8,7 +8,7 @@ export default function Page() {
         <title>Memorii</title>
         <meta property="og:title" content="Memorii" key="title" />
         <meta property="og:description" content="Your photos are your memories. Keep them safe." key="title" />
-        <link rel="icon" href="/clouds.png" type="image/png" />
+        <link rel="icon" href="/fav-cloud.png" type="image/png" />
       </Head>
       <SignUp />
     </div>

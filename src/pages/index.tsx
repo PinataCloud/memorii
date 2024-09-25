@@ -75,7 +75,7 @@ export default function Photos() {
         <title>Memorii</title>
         <meta property="og:title" content="Memorii" key="title" />
         <meta property="og:description" content="Your photos are your memories. Keep them safe." key="title" />
-        <link rel="icon" href="/clouds.png" type="image/png" />
+        <link rel="icon" href="/fav-cloud.png" type="image/png" />
       </Head>
       <div className="py-6 flex items-center justify-between w-full font-sfBold">
         <h1 className="text-3xl font-bold font-sfSemi flex items-center"><img src="/clouds.svg" alt="3D clouds" /></h1>
